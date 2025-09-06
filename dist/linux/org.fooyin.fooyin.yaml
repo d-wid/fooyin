@@ -113,9 +113,8 @@ modules:
       - -DCMAKE_BUILD_TYPE=Release
     sources:
       - type: git
-        url: https://github.com/fooyin/fooyin.git
-        tag: v0.9.1
-        commit: f4d2fefd59aa2e6377e4f410e4bfbbb8c2d9b84f
+        url: https://github.com/d-wid/fooyin.git
+        commit: 5ccd2ad1ff372ae22636feb1ad627b7a71d20302
         x-checker-data:
           type: git
           tag-pattern: v([\d.]+)
