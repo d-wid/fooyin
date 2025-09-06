@@ -12,6 +12,8 @@
 </p>
 
 <hr />
+# Reason for forking:
+To try a version that already incorporates https://github.com/fooyin/fooyin/commit/cffe88058e96c44e563e927d8a4a903e28246020 (current release 0.9.1 doesn't as I write this) and to include the fix suggested in https://github.com/fooyin/fooyin/commit/376a024bf1c18d5a4829d1ca125c72e9c4014ff9 which is to revert it.
 
 ## A customisable music player
 
