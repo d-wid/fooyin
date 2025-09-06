@@ -1,0 +1,121 @@
+#Modified Flatpak manifest.
+
+app-id: org.fooyin.fooyin
+runtime: org.kde.Platform
+runtime-version: '6.9'
+sdk: org.kde.Sdk
+command: fooyin
+add-extensions:
+  org.freedesktop.Platform.ffmpeg-full:
+    directory: lib/ffmpeg
+    version: '24.08'
+    add-ld-path: .
+finish-args:
+  - --device=dri
+  - --filesystem=xdg-download
+  - --filesystem=xdg-music
+  - --filesystem=xdg-run/pipewire-0
+  - --filesystem=/run/media
+  - --own-name=org.mpris.MediaPlayer2.fooyin
+  - --share=ipc
+#  - --share=network
+  - --socket=fallback-x11
+  - --socket=pulseaudio
+  - --socket=wayland
+  - --system-talk-name=org.freedesktop.UDisks2
+  - --talk-name=org.kde.StatusNotifierWatcher # Needed for tray icon
+cleanup:
+  - '*.a'
+  - '*.la'
+  - /include
+  - /lib/cmake
+  - /lib/alsa-lib/pkgconfig
+  - /lib/pkgconfig
+  - /mkspecs
+  - /share/aclocal
+  - /share/doc/KDSingleApplication-qt6
+cleanup-commands:
+  - mkdir -p ${FLATPAK_DEST}/lib/ffmpeg
+modules:
+  - name: KDSingleApplication
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_LIBVGM=OFF
+      - -DBUILD_ALSA=OFF
+      - -DKDSingleApplication_EXAMPLES=OFF
+    sources:
+      - type: git
+        url: https://github.com/KDAB/KDSingleApplication.git
+        tag: v1.2.0
+        commit: 3186a158f8e6565e89f5983b4028c892737844ff
+        x-checker-data:
+          type: git
+          tag-pattern: v([\d.]+)
+
+  - name: libopenmpt
+    config-opts:
+      - --disable-examples
+      - --disable-openmpt123
+      - --disable-static
+      - --disable-tests
+      - --without-portaudio
+      - --without-portaudiocpp
+    cleanup:
+      - /include
+      - '*.la'
+      - '*.so'
+      - /lib/pkgconfig
+      - /share/doc
+    sources:
+      - type: archive
+        url: https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-0.8.2+release.autotools.tar.gz
+        sha256: 844e4ff98dbd9942bbe4a1048226f91f8bc5b460b7bec6489e67cedb3e0aac37
+        x-checker-data:
+          type: anitya
+          project-id: 141468
+          stable-only: true
+          url-template: https://lib.openmpt.org/files/libopenmpt/src/libopenmpt-$version+release.autotools.tar.gz
+
+  - name: game-music-emu
+    buildsystem: cmake-ninja
+    cleanup:
+      - /include
+      - /lib/*.so
+      - /lib/pkgconfig
+    sources:
+      - type: git
+        url: https://github.com/libgme/game-music-emu.git
+        tag: 0.6.4
+        commit: f0d9517c5c3e0b712f553baa62e213336587d52e
+        x-checker-data:
+          type: git
+          tag-patern: ([\d.]+)
+
+  - name: libebur128
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+    sources:
+      - type: git
+        url: https://github.com/jiixyj/libebur128.git
+        tag: v1.2.6
+        commit: 67b33abe1558160ed76ada1322329b0e9e058b02
+        x-checker-data:
+          type: git
+          tag-pattern: v([\d.]+)
+
+  - name: fooyin
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DCMAKE_BUILD_TYPE=Release
+    sources:
+      - type: git
+        url: https://github.com/fooyin/fooyin.git
+        tag: v0.9.1
+        commit: f4d2fefd59aa2e6377e4f410e4bfbbb8c2d9b84f
+        x-checker-data:
+          type: git
+          tag-pattern: v([\d.]+)
