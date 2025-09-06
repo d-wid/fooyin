@@ -42,8 +42,6 @@ modules:
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
-      - -DBUILD_LIBVGM=OFF
-      - -DBUILD_ALSA=OFF
       - -DKDSingleApplication_EXAMPLES=OFF
     sources:
       - type: git
@@ -111,6 +109,8 @@ modules:
     builddir: true
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
+      - -DBUILD_LIBVGM=OFF
+      - -DBUILD_ALSA=OFF
     sources:
       - type: git
         url: https://github.com/d-wid/fooyin.git
