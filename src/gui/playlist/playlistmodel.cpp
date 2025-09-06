@@ -1190,8 +1190,17 @@ void PlaylistModel::playingTrackChanged(const PlaylistTrack& track)
 {
     m_playingIndex = indexAtPlaylistIndex(track.indexInPlaylist, true);
 
-    if(std::exchange(m_playingTrack, track) != track) {
-        invalidateData();
+    const auto oldTrack = std::exchange(m_playingTrack, track);
+
+    if(oldTrack.isValid() && oldTrack != track) {
+        const auto oldIndex = indexAtPlaylistIndex(oldTrack.indexInPlaylist, true);
+        emit dataChanged(oldIndex, rightIndex(oldIndex), {Qt::DecorationRole, Qt::BackgroundRole});
+    }
+
+    if(m_playingTrack.isValid()) {
+        if(const auto bottomRight = rightIndex(m_playingIndex); bottomRight.isValid()) {
+            emit dataChanged(m_playingIndex, bottomRight, {Qt::DecorationRole, Qt::BackgroundRole});
+        }
     }
 
     if(m_stopAtIndex.isValid()
